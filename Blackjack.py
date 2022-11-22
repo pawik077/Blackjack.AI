@@ -2,6 +2,7 @@ from Deck import Deck
 
 import random as rd
 from time import time
+import os
 
 deck = Deck()
 
@@ -141,6 +142,7 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool):
             level 2: gather level 2 and the history of seen cards (card counting)
         shuffle (bool): Whether to shuffle the deck before each round (needed only for level 3)'''
     tStart = time()
+    os.makedirs('datasets', exist_ok=True)
     for i in range(iters):
         print(f'\rProcessing {i + 1} out of {iters}...', end='')
         try:
@@ -150,14 +152,12 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool):
                 print(data)
                 print(tags)
                 return
-            dataFile = open('datasets/' + output + '.data', 'a')
-            tagFile = open('datasets/' + output + '.tags', 'a')
-            for datum in data:
-                dataFile.write(str(datum) + '\n')
-            for tag in tags:
-                tagFile.write(tag + '\n')
-            dataFile.close()
-            tagFile.close()
+            with open('datasets/' + output + '.data', 'a') as dataFile:
+                for datum in data:
+                    dataFile.write(str(datum) + '\n')
+            with open('datasets/' + output + '.tags', 'a') as tagFile:
+                for tag in tags:
+                    tagFile.write(tag + '\n')
             # shuffle the deck if enabled
             if shuffle:
                 deck.shuffle()
