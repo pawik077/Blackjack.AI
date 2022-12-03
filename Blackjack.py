@@ -148,7 +148,7 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool, seed):
     for i in range(iters):
         print(f'\rProcessing {i + 1} out of {iters}...', end='')
         try:
-            data, tags = round(True, level, False)
+            data, tags = round(True, level, False, seed)
             if len(data) != len(tags):
                 print("Error: data and tags are not the same length")
                 print(data)
@@ -209,11 +209,11 @@ if __name__ == '__main__':
             deck = Deck(seed)
             round(False, 0, True, seed)
     elif generate:
-        if iters == 0 or output == '' or level < 0 or level > 3:
+        if iters == 0 or output == '' or level not in (1, 2, 3):
             print("Error: invalid arguments")
-            print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s]")
+            print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s] [-e]")
         else:
             deck = Deck(seed)
             genDataSet(iters, output, level, shuffle, seed)
     else:
-        print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s]")
+        print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s] [-e]")
