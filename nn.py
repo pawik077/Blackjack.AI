@@ -28,7 +28,7 @@ def nn3(setName: str):
 
 if __name__ == '__main__':
 	try:
-		opts, args = getopt(sys.argv[1:], 'n:d:')
+		opts, args = getopt(sys.argv[1:], 'l:d:', ['level=', 'dataset='])
 	except getopt.GetoptError as err:
 		print(f'Error: {err}')
 		sys.exit(2)
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 			dataset = a
 
 	if nn == '' or dataset == '':
-		print('Usage: python3 nn.py -n <nn#> -d <dataset>')
+		print('Usage: python3 nn.py -l <level> -d <dataset>')
 		sys.exit(1)
 	else:
 		match nn:
@@ -54,5 +54,5 @@ if __name__ == '__main__':
 			case '3':
 				nn3(dataset)
 			case _:
-				print('Usage: python3 nn.py -n <nn#> -d <dataset>')
+				print('Usage: python3 nn.py -l <level> -d <dataset>')
 				sys.exit(1)

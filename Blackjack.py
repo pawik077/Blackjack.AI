@@ -171,7 +171,7 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool):
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'pgi:o:l:s', ['--play', '--generate', '--iters=', '--output=', '--level=', '--shuffle'])
+        opts, args = getopt.getopt(sys.argv[1:], 'pgi:o:l:s', ['play', 'generate', 'iters=', 'output=', 'level=', 'shuffle'])
     except getopt.GetoptError as err:
         print(f'Error: {err}')
         exit(2)
