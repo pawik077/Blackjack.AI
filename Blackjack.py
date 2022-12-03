@@ -25,9 +25,9 @@ def round(montecarlo: bool, level: int, debug: bool):
     Args:
         montecarlo (bool): Whether to use montecarlo simulation
         level (int): The level of montecarlo simulation
-            level 0: gather data about the player's hand
-            level 1: gather level 1 and data about the dealer's hand
-            level 2: gather level 2 and the history of seen cards (card counting)
+            level 1: gather data about the player's hand
+            level 2: gather level 1 and data about the dealer's hand
+            level 3: gather level 2 and the history of seen cards (card counting)
         debug (bool): Whether to print debug messages'''
     # data collection lists
     data = []
@@ -139,9 +139,9 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool):
         iters (int): The number of rounds to simulate
         output (str): The name of the output file
         level (int): The level of montecarlo simulation
-            level 0: gather data about the player's hand
-            level 1: gather level 1 and data about the dealer's hand
-            level 2: gather level 2 and the history of seen cards (card counting)
+            level 1: gather data about the player's hand
+            level 2: gather level 1 and data about the dealer's hand
+            level 3: gather level 2 and the history of seen cards (card counting)
         shuffle (bool): Whether to shuffle the deck before each round (needed only for level 3)'''
     tStart = time()
     os.makedirs('datasets', exist_ok=True)
