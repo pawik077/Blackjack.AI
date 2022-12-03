@@ -2,7 +2,9 @@ from Deck import Deck
 
 import random as rd
 from time import time
+import getopt
 import os
+import sys
 
 deck = Deck()
 
@@ -168,5 +170,45 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool):
     print(f'\rFinished in {(tEnd - tStart):.2f} seconds ({((tEnd - tStart) / iters * 1000):.5f} milliseconds per round)')
 
 if __name__ == '__main__':
-    # generate a dataset of 10000 rounds of blackjack
-    genDataSet(10000, 'test', 3, False)
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'pgi:o:l:s', ['--play', '--generate', '--iters=', '--output=', '--level=', '--shuffle'])
+    except getopt.GetoptError as err:
+        print(f'Error: {err}')
+        exit(2)
+
+    iters = 0
+    output = ''
+    level = 0
+    shuffle = False
+    play = False
+    generate = False
+
+    for o,a in opts:
+        if o in ('-p', '--play'):
+            play = True
+        elif o in ('-g', '--generate'):
+            generate = True
+        elif o in ('-i', '--iters'):
+            iters = int(a)
+        elif o in ('-o', '--output'):
+            output = a
+        elif o in ('-l', '--level'):
+            level = int(a)
+        elif o in ('-s', '--shuffle'):
+            shuffle = True
+
+    if play and generate:
+        print("Error: cannot play and generate at the same time")
+    elif play:
+        if iters != 0 or output != '' or level != 0 or shuffle:
+            print("Error: cannot play and generate at the same time")
+        else:
+            round(False, 0, True)
+    elif generate:
+        if iters == 0 or output == '' or level < 0 or level > 3:
+            print("Error: invalid arguments")
+            print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s]")
+        else:
+            genDataSet(iters, output, level, shuffle)
+    else:
+        print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s]")
