@@ -1,3 +1,6 @@
+from getopt import getopt
+import sys
+
 def nn1(setName: str):
 	with open(f'datasets/{setName}-c.data', 'r') as f:
 		data = [int(l.rstrip()) for l in f.readlines()]
@@ -24,4 +27,28 @@ def nn3(setName: str):
 
 
 if __name__ == '__main__':
-	nn2('train2')
+	opts, args = getopt(sys.argv[1:], 'n:d:')
+
+	nn = ''
+	dataset = ''
+
+	for o,a in opts:
+		if o in ('-n'):
+			nn = a
+		elif o in ('-d'):
+			dataset = a
+
+	if nn == '' or dataset == '':
+		print('Usage: python3 nn.py -n <nn#> -d <dataset>')
+		sys.exit(1)
+	else:
+		match nn:
+			case '1':
+				nn1(dataset)
+			case '2':
+				nn2(dataset)
+			case '3':
+				nn3(dataset)
+			case _:
+				print('Usage: python3 nn.py -n <nn#> -d <dataset>')
+				sys.exit(1)

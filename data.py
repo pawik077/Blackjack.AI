@@ -1,4 +1,7 @@
-def cleanDataset(setName: str):
+import sys
+from getopt import getopt
+
+def cleanDataset(setName: str, outputName: str):
 	'''Cleans the dataset by removing duplicate and conflicting entries'''
 	with open(f'datasets/{setName}.data', 'r') as f:
 		data = f.readlines()
@@ -8,8 +11,8 @@ def cleanDataset(setName: str):
 
 	print(f'Original dataset size: {len(data)}')
 
-	dataFile = open(f'datasets/{setName}-c.data', 'w')
-	tagsFile = open(f'datasets/{setName}-c.tags', 'w')
+	dataFile = open(f'{outputName}.data', 'w')
+	tagsFile = open(f'{outputName}.tags', 'w')
 	init = {}
 	seen = []
 	total = 0
@@ -65,4 +68,21 @@ def cleanDataset(setName: str):
 	tagsFile.close()
 
 if __name__ == '__main__':
-	cleanDataset('test1')
+	opts, args = getopt(sys.argv[1:], 'd:o:', ['dataset=', 'output='])
+
+	dataset = ''
+	output = ''
+
+	for o, a in opts:
+		if o in ('-d', '--dataset'):
+			dataset = a
+		elif o in ('-o', '--output'):
+			output = a
+	
+	if dataset == '':
+		print('Usage: python data.py -d <dataset> [-o <output>]')
+		exit(1)
+	if output == '':
+		output = f'{dataset}-c'
+
+	cleanDataset(dataset, output)
