@@ -22,13 +22,13 @@ class Card:
         return self.name
 
 class Deck:
-    def __init__(self) -> None:
+    def __init__(self, seed) -> None:
         '''Constructor'''
         self.cards = []
         self.discarded = []
         self.suits = ["Spades", "Clubs", "Hearts", "Diamonds"]
         self.ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-        self.shuffle()
+        self.shuffle(seed)
 
     def build(self) -> None:
         '''Builds the deck'''
@@ -37,8 +37,9 @@ class Deck:
             for v in self.ranks:
                 self.cards.append(Card(s, v))
 
-    def shuffle(self) -> None:
+    def shuffle(self, seed=None) -> None:
         '''Shuffles the deck'''
+        random.seed(seed)
         self.build()
         random.shuffle(self.cards)
 

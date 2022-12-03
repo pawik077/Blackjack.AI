@@ -6,7 +6,7 @@ import getopt
 import os
 import sys
 
-deck = Deck()
+# deck = Deck()
 
 def handValue(hand):
     '''Returns the value of a hand'''
@@ -20,7 +20,7 @@ def handValue(hand):
         c += 1
     return value
 
-def round(montecarlo: bool, level: int, debug: bool):
+def round(montecarlo: bool, level: int, debug: bool, seed):
     '''Play a single round of blackjack
     Args:
         montecarlo (bool): Whether to use montecarlo simulation
@@ -32,10 +32,10 @@ def round(montecarlo: bool, level: int, debug: bool):
     # data collection lists
     data = []
     tags = []
-    if level < 3: deck.shuffle() # shuffle the deck if we're not counting cards
+    if level < 3: deck.shuffle(seed) # shuffle the deck if we're not counting cards
     if deck.cardinality() < 10: 
         if debug: print("Shuffling deck")
-        deck.shuffle() # shuffle the deck if there are less than 10 cards left
+        deck.shuffle(seed) # shuffle the deck if there are less than 10 cards left
     choices = ['h', 's']
 
     # initial deal
@@ -133,7 +133,7 @@ def round(montecarlo: bool, level: int, debug: bool):
                     if debug: print("Player wins!")
                     return data, tags
 
-def genDataSet(iters: int, output: str, level: int, shuffle: bool):
+def genDataSet(iters: int, output: str, level: int, shuffle: bool, seed):
     '''Generate a dataset of blackjack rounds
     Args:
         iters (int): The number of rounds to simulate
@@ -162,16 +162,16 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool):
                     tagFile.write(tag + '\n')
             # shuffle the deck if enabled
             if shuffle:
-                deck.shuffle()
+                deck.shuffle(seed)
         except Exception as ex:
             print(ex)
-            deck.shuffle()
+            deck.shuffle(seed)
     tEnd = time()
     print(f'\rFinished in {(tEnd - tStart):.2f} seconds ({((tEnd - tStart) / iters * 1000):.5f} milliseconds per round)')
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'pgi:o:l:s', ['play', 'generate', 'iters=', 'output=', 'level=', 'shuffle'])
+        opts, args = getopt.getopt(sys.argv[1:], 'pgi:o:l:se:', ['play', 'generate', 'iters=', 'output=', 'level=', 'shuffle', 'seed='])
     except getopt.GetoptError as err:
         print(f'Error: {err}')
         exit(2)
@@ -182,6 +182,7 @@ if __name__ == '__main__':
     shuffle = False
     play = False
     generate = False
+    seed = None
 
     for o,a in opts:
         if o in ('-p', '--play'):
@@ -196,6 +197,8 @@ if __name__ == '__main__':
             level = int(a)
         elif o in ('-s', '--shuffle'):
             shuffle = True
+        elif o in ('-e', '--seed'):
+            seed = int(a)
 
     if play and generate:
         print("Error: cannot play and generate at the same time")
@@ -203,12 +206,14 @@ if __name__ == '__main__':
         if iters != 0 or output != '' or level != 0 or shuffle:
             print("Error: cannot play and generate at the same time")
         else:
-            round(False, 0, True)
+            deck = Deck(seed)
+            round(False, 0, True, seed)
     elif generate:
         if iters == 0 or output == '' or level < 0 or level > 3:
             print("Error: invalid arguments")
             print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s]")
         else:
-            genDataSet(iters, output, level, shuffle)
+            deck = Deck(seed)
+            genDataSet(iters, output, level, shuffle, seed)
     else:
         print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s]")
