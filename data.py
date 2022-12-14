@@ -11,8 +11,8 @@ def cleanDataset(setName: str, outputName: str):
 
 	print(f'Original dataset size: {len(data)}')
 
-	dataFile = open(f'{outputName}.data', 'w')
-	tagsFile = open(f'{outputName}.tags', 'w')
+	dataFile = open(f'datasets/{outputName}.data', 'w')
+	tagsFile = open(f'datasets/{outputName}.tags', 'w')
 	init = {}
 	seen = []
 	total = 0
