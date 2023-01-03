@@ -128,9 +128,13 @@ def round(montecarlo: bool, level: int, debug: bool, seed):
                     tags.append('h')
                     if debug: print("Dealer wins!")
                     return data, tags
-                else:
+                elif sum < playersSum:
                     tags.append('s')
                     if debug: print("Player wins!")
+                    return data, tags
+                else:
+                    tags.append('h')
+                    if debug: print("Push")
                     return data, tags
 
 def genDataSet(iters: int, output: str, level: int, shuffle: bool, seed):
