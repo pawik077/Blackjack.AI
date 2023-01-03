@@ -220,4 +220,4 @@ if __name__ == '__main__':
             deck = Deck(seed)
             genDataSet(iters, output, level, shuffle, seed)
     else:
-        print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s] [-e]")
+        print("Usage: python3 blackjack.py [-p | -g] [-i <iters>] [-o <output>] [-l <level>] [-s] [-e <seed>]")

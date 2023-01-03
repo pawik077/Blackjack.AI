@@ -137,12 +137,12 @@ if __name__ == '__main__':
 
 	nn = False
 	do_print = False
-	level = ''
+	level = 0
 	dataset = ''
 
 	for o,a in opts:
 		if o in ('-l', '--level'):
-			level = a
+			level = int(a)
 		elif o in ('-d', '--dataset'):
 			dataset = a
 		elif o in ('-n', '--neural'):
@@ -152,7 +152,7 @@ if __name__ == '__main__':
 	if nn and do_print:
 		print('Usage: python3 nn.py [-n | -p] -l <level> -d <dataset>')
 		sys.exit(1)
-	if level == '' or dataset == '':
+	if level == 0 or dataset == '':
 		print('Usage: python3 nn.py [-n | -p] -l <level> -d <dataset>')
 		sys.exit(1)
 	elif nn:
