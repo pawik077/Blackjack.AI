@@ -24,13 +24,13 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
 
         if level < 3: deck.shuffle(seed)
         if deck.cardinality() < 10:
-            if debug: print('Shuffling deck')
+            if debug: print('\nShuffling deck')
             deck.shuffle(seed)
         
         dealersHand = [deck.deal(), deck.deal()]
         playersHand = [deck.deal(), deck.deal()]
         if debug: 
-            print(f'Players hand: {playersHand}')
+            print(f'\nPlayers hand: {playersHand}')
             print(f'Dealers hand: [{dealersHand[0]}, ??]')
         
         sum = handValue(playersHand)
@@ -134,7 +134,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
 
 if __name__ == '__main__':
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'l:d:i:se:', ['level=', 'dataset=', 'iters=', 'shuffle', 'seed='])
+        opts, args = getopt.getopt(sys.argv[1:], 'l:d:i:se:b', ['level=', 'dataset=', 'iters=', 'shuffle', 'seed=', 'debug'])
     except getopt.GetoptError as err:
         print(f'Error: {err}')
         sys.exit(2)
@@ -143,6 +143,7 @@ if __name__ == '__main__':
     dataset = ''
     iters = 0
     shuffle = False
+    debug = False
     seed = None
     
     for o, a in opts:
@@ -156,12 +157,14 @@ if __name__ == '__main__':
             shuffle = True
         elif o in ('-e', '--seed'):
             seed = int(a)
+        elif o in ('-b', '--debug'):
+            debug = True
     if level == 0 or dataset == '' or iters == 0:
         print('Usage: python3 test.py -l <level> -d <dataset> -i <iters> [-s] [-e <seed>]')
         sys.exit(1)
     else:
         deck = Deck(seed)
-        wins, losses, ties, duration = test_model(dataset, iters, level, False, shuffle, seed)
+        wins, losses, ties, duration = test_model(dataset, iters, level, debug, shuffle, seed)
         print(f'\rFinished in : {duration:.2f} seconds ({((duration) / iters * 1000):.5f} milliseconds per iteration)')
         print(f'Wins: {wins}, Losses: {losses}, Ties: {ties}')
         print(f'Win rate: {wins / iters * 100}%')
