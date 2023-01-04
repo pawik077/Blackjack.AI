@@ -8,6 +8,17 @@ import numpy as np
 from time import time
 
 def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool, seed):
+    '''Test a model against a set number of iterations of blackjack
+    Args:
+        setName (str): The name of the model to test
+        iters (int): The number of rounds to simulate
+        level (int): The level of the model to test
+            level 1: only the player's hand value
+            level 2: the player's hand value and the dealer's upcard
+            level 3: the player's hand value, the dealer's upcard, and the deck's negation (card counting)
+        debug (bool): Whether or not to print debug messages
+        shuffle (bool): Whether or not to shuffle the deck (needed only for level 3)
+        seed (int): The seed to use for shuffling the deck (None for default)'''
     global deck
     with open(f'models/{setName}.json', 'r') as f:
         model = tf.keras.models.model_from_json(f.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})

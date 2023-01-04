@@ -5,6 +5,9 @@ import numpy as np
 import os
 
 def nn1(setName: str):
+	'''Train a model on a level 1 dataset
+	Args:
+		setName (str): The name of the dataset to train on'''
 	with open(f'datasets/{setName}.data', 'r') as f:
 		data = [int(l.rstrip()) for l in f.readlines()]
 	with open(f'datasets/{setName}.tags', 'r') as f:
@@ -31,7 +34,10 @@ def nn1(setName: str):
 	model.save_weights(f'models/{setName}.h5')
 	print('Saved model to disk')
 
-def nn2(setName: str) :
+def nn2(setName: str):
+	'''Train a model on a level 2 dataset
+	Args:
+		setName (str): The name of the dataset to train on'''
 	with open(f'datasets/{setName}.data', 'r') as f:
 		data = [list(map(int,x)) for x in [l.rstrip()[1:-1].replace(' ', '').split(',') for l in f.readlines()]] # that one too (ʘ‿ʘ)
 	with open(f'datasets/{setName}.tags', 'r') as f:
@@ -59,6 +65,9 @@ def nn2(setName: str) :
 	print('Saved model to disk')
 
 def nn3(setName: str):
+	'''Train a model on a level 3 dataset
+	Args:
+		setName (str): The name of the dataset to train on'''
 	with open(f'datasets/{setName}-c.data', 'r') as f:
 		data = [list(map(int,x)) for x in [l.rstrip()[1:-1].replace(' ', '').split(',') for l in f.readlines()]]
 	with open(f'datasets/{setName}-c.tags', 'r') as f:
@@ -88,6 +97,9 @@ def nn3(setName: str):
 	print('Saved model to disk')
 
 def print_strategy_1(setName: str):
+	'''Print the strategy of a level 1 model
+	Args:
+		setName (str): The name of the model to print the strategy of'''
 	with open(f'models/{setName}.json', 'r') as json_file:
 		model = tf.keras.models.model_from_json(json_file.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})
 	model.load_weights(f'models/{setName}.h5')
@@ -101,6 +113,9 @@ def print_strategy_1(setName: str):
 			print(f'{i} -> h')
 	
 def print_strategy_2(setName: str):
+	'''Print the strategy of a level 2 model
+	Args:
+		setName (str): The name of the model to print the strategy of'''
 	with open(f'models/{setName}.json', 'r') as json_file:
 		model = tf.keras.models.model_from_json(json_file.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})
 	model.load_weights(f'models/{setName}.h5')

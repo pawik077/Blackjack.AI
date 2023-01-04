@@ -6,8 +6,6 @@ import getopt
 import os
 import sys
 
-# deck = Deck()
-
 def handValue(hand):
     '''Returns the value of a hand'''
     value = 0
@@ -25,10 +23,11 @@ def round(montecarlo: bool, level: int, debug: bool, seed):
     Args:
         montecarlo (bool): Whether to use montecarlo simulation
         level (int): The level of montecarlo simulation
-            level 1: gather data about the player's hand
-            level 2: gather level 1 and data about the dealer's hand
-            level 3: gather level 2 and the history of seen cards (card counting)
-        debug (bool): Whether to print debug messages'''
+            level 1: gather data about the player's hand value
+            level 2: gather data about the player's hand value and the dealer's upcard value
+            level 3: gather data about the player's hand value, the dealer's upcard value, and the deck's negation (card counting)
+        debug (bool): Whether to print debug messages
+        seed (int): The seed to use for shuffling the deck (None for default)'''
     # data collection lists
     data = []
     tags = []
@@ -143,10 +142,11 @@ def genDataSet(iters: int, output: str, level: int, shuffle: bool, seed):
         iters (int): The number of rounds to simulate
         output (str): The name of the output file
         level (int): The level of montecarlo simulation
-            level 1: gather data about the player's hand
-            level 2: gather level 1 and data about the dealer's hand
-            level 3: gather level 2 and the history of seen cards (card counting)
-        shuffle (bool): Whether to shuffle the deck before each round (needed only for level 3)'''
+            level 1: gather data about the player's hand value
+            level 2: gather data about the player's hand value and the dealer's upcard value
+            level 3: gather data about the player's hand value, the dealer's upcard value, and the deck's negation (card counting)
+        shuffle (bool): Whether to shuffle the deck before each round (needed only for level 3)
+        seed (int): The seed to use for for shuffling the deck (None for default)'''
     tStart = time()
     os.makedirs('datasets', exist_ok=True)
     for i in range(iters):
