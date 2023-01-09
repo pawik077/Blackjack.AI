@@ -19,7 +19,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
         debug (bool): Whether or not to print debug messages
         shuffle (bool): Whether or not to shuffle the deck (needed only for level 3)
         seed (int): The seed to use for shuffling the deck (None for default)'''
-    global deck
+    deck = Deck(seed)
     with open(f'models/{setName}.json', 'r') as f:
         model = tf.keras.models.model_from_json(f.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})
     model.load_weights(f'models/{setName}.h5')
@@ -174,9 +174,9 @@ if __name__ == '__main__':
         print('Usage: python3 test.py -l <level> -d <dataset> -i <iters> [-s] [-e <seed>]')
         sys.exit(1)
     else:
-        deck = Deck(seed)
+        # deck = Deck(seed)
         wins, losses, ties, duration = test_model(dataset, iters, level, debug, shuffle, seed)
         print(f'\rFinished in : {duration:.2f} seconds ({((duration) / iters * 1000):.5f} milliseconds per iteration)')
         print(f'Wins: {wins}, Losses: {losses}, Ties: {ties}')
-        print(f'Win rate: {wins / iters * 100}%')
-        print(f'Win-to-loss ratio: {wins / losses}')
+        print(f'Win rate: {(wins / iters * 100):.2f}%')
+        print(f'Win-to-loss ratio: {(wins / losses):.2f}')

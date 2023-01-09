@@ -68,9 +68,9 @@ def nn3(setName: str):
 	'''Train a model on a level 3 dataset
 	Args:
 		setName (str): The name of the dataset to train on'''
-	with open(f'datasets/{setName}-c.data', 'r') as f:
+	with open(f'datasets/{setName}.data', 'r') as f:
 		data = [list(map(int,x)) for x in [l.rstrip()[1:-1].replace(' ', '').split(',') for l in f.readlines()]]
-	with open(f'datasets/{setName}-c.tags', 'r') as f:
+	with open(f'datasets/{setName}.tags', 'r') as f:
 		tags = [(1 if l.rstrip() == 'h' else 0) for l in f.readlines()] 
 
 	datasize = int(len(data) * 0.75) # 75% of the data is used for training
@@ -172,21 +172,21 @@ if __name__ == '__main__':
 		sys.exit(1)
 	elif nn:
 		match level:
-			case '1':
+			case 1:
 				nn1(dataset)
-			case '2':
+			case 2:
 				nn2(dataset)
-			case '3':
+			case 3:
 				nn3(dataset)
 			case _:
-				print('Usage: python3 nn.py -l <level> -d <dataset>')
+				print('Usage: python3 nn.py [-n | -p] -l <level> -d <dataset>')
 				sys.exit(1)
 	elif do_print:
 		match level:
-			case '1':
+			case 1:
 				print_strategy_1(dataset)
-			case '2':
+			case 2:
 				print_strategy_2(dataset)
 			case _:
-				print('Usage: python3 nn.py -l <level> -d <dataset>')
+				print('Usage: python3 nn.py [-n | -p] -l <level> -d <dataset>')
 				sys.exit(1)
