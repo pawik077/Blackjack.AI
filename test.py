@@ -171,7 +171,7 @@ if __name__ == '__main__':
         elif o in ('-b', '--debug'):
             debug = True
     if level == 0 or dataset == '' or iters == 0:
-        print('Usage: python3 test.py -l <level> -d <dataset> -i <iters> [-s] [-e <seed>]')
+        print('Usage: python3 test.py -l <level> -d <dataset> -i <iters> [-s] [-e <seed>] [-b]')
         sys.exit(1)
     else:
         # deck = Deck(seed)
