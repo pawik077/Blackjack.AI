@@ -41,12 +41,18 @@ def randomChoice(playersSum: int):
     choice = rd.choices(choices, weights=(1 - (playersSum - 4) / 17, (playersSum - 4) / 17), k=1)[0]
     return choice
 
+def randomChoice11(playersSum: int):
+    if playersSum <= 11: return 'h'
+    choices = ['h', 's']
+    choice = rd.choices(choices, weights=(1 - (playersSum - 11) / 10, (playersSum - 11) / 10), k=1)[0]
+    return choice
+
 def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool, seed):
     '''Test a model against a set number of iterations of blackjack
     Args:
-        setName (str): The name of the model to test (standard to use standard strategy instead, random to choose randomly weighed on current player hand value)
+        setName (str): The name of the model to test (standard to use standard strategy instead, random to choose randomly weighed on current player hand value, random11 to choose randomly, but always hitting when below 11)
         iters (int): The number of rounds to simulate
-        level (int): The level of the model to test (irrelevant for standard strategy and random)
+        level (int): The level of the model to test (irrelevant for standard strategy and random choice)
             level 1: only the player's hand value
             level 2: the player's hand value and the dealer's upcard
             level 3: the player's hand value, the dealer's upcard, and the deck's negation (card counting)
@@ -54,7 +60,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
         shuffle (bool): Whether or not to shuffle the deck (needed only for level 3)
         seed (int): The seed to use for shuffling the deck (None for default)'''
     deck = Deck(seed)
-    if setName != 'standard' and setName != 'random':
+    if setName not in ['standard', 'random', 'random11']:
         with open(f'models/{setName}.json', 'r') as f:
             model = tf.keras.models.model_from_json(f.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})
         model.load_weights(f'models/{setName}.h5')
@@ -99,7 +105,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
         
         # player's turn
         for i in range(8):
-            if setName != 'standard' and setName != 'random':
+            if setName not in ['standard', 'random', 'random11']:
                 if level == 1:
                     data.append(handValue(playersHand))
                 elif level == 2:
@@ -116,6 +122,8 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
                 choice = standardStrategy(playersSum, playersHand, dealersHand)
             elif setName == 'random':
                 choice = randomChoice(playersSum)
+            elif setName == 'random11':
+                choice = randomChoice11(playersSum)
             
             if choice == 'h':
                 playersHand.append(deck.deal())
