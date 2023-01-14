@@ -106,7 +106,7 @@ def print_strategy_1(setName: str):
 	print(model.summary())
 	print(f'Dataset: {setName}')
 	for i in range(21):
-		prediction = model.predict(np.array([i, 10]))
+		prediction = model.predict(np.array([i, 10]), verbose=0)
 		if prediction[0][0] > prediction[0][1]:
 			print(f'{i} -> s')
 		else:
@@ -125,7 +125,7 @@ def print_strategy_2(setName: str):
 	for i in range(17):
 		results.append([])
 		for j in range(9):
-			prediction = model.predict(np.array([[i + 5, j + 2]]))
+			prediction = model.predict(np.array([[i + 5, j + 2]]), verbose=0)
 			if prediction[0][0] > prediction[0][1]:
 				results[i].append('s')
 			else:
