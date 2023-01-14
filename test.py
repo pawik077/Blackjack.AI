@@ -160,6 +160,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
                     dealersHand.append(deck.deal())
                     if debug: 
                         print('Dealer hits')
+                        print(f'Players hand: {playersHand}')
                         print(f'Dealers hand: {dealersHand}')
                 sum = handValue(dealersHand)
                 if sum > 21:
