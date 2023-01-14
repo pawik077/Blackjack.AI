@@ -116,7 +116,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
                 if debug:
                     print('Hitting')
                     print(f'Players hand: {playersHand}')
-                    print(f'Dealers hand: {dealersHand[0]}, ??')
+                    print(f'Dealers hand: [{dealersHand[0]}, ??]')
                 if sum > 21:
                     if debug: print('Player busts! Player loses!')
                     losses += 1
