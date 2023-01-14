@@ -1,4 +1,4 @@
-from Deck import Deck
+from Deck import Deck, Card
 from Blackjack import handValue
 
 import getopt
@@ -7,10 +7,39 @@ import tensorflow as tf
 import numpy as np
 from time import time
 
+def standardStrategy(playersSum: int, playersHand: list, dealersHand: list):
+    if playersSum <= 11:
+        choice = 'h'
+    elif playersSum == 12:
+        if dealersHand[0].getValue() in [2, 3, 7, 8, 9, 10, 11]:
+            choice = 'h'
+        else:
+            choice = 's'
+    elif playersSum in [13, 14, 15, 16]:
+        if dealersHand[0].getValue() <= 6:
+            choice = 'h'
+        else:
+            choice = 's'
+    elif playersSum >= 17:
+        if len(playersHand) == 2 and any(x in playersHand for x in [Card('Spades', 'A'), Card('Clubs', 'A'), Card('Hearts', 'A'), Card('Diamonds', 'A')]):
+            if playersSum == 17:
+                choice = 'h'
+            elif playersSum == 18:
+                if dealersHand[0].getValue() in [3, 4, 5, 6, 9, 10, 11]:
+                    choice = 'h'
+                else:
+                    choice = 's'
+            elif playersSum >= 19:
+                choice = 's'
+        else:
+            choice = 's'
+    return choice
+
+
 def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool, seed):
     '''Test a model against a set number of iterations of blackjack
     Args:
-        setName (str): The name of the model to test
+        setName (str): The name of the model to test (standard to use standard strategy insteaad)
         iters (int): The number of rounds to simulate
         level (int): The level of the model to test
             level 1: only the player's hand value
@@ -20,9 +49,10 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
         shuffle (bool): Whether or not to shuffle the deck (needed only for level 3)
         seed (int): The seed to use for shuffling the deck (None for default)'''
     deck = Deck(seed)
-    with open(f'models/{setName}.json', 'r') as f:
-        model = tf.keras.models.model_from_json(f.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})
-    model.load_weights(f'models/{setName}.h5')
+    if setName != 'standard':
+        with open(f'models/{setName}.json', 'r') as f:
+            model = tf.keras.models.model_from_json(f.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})
+        model.load_weights(f'models/{setName}.h5')
     
     wins = 0
     losses = 0
@@ -64,18 +94,21 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
         
         # player's turn
         for i in range(8):
-            if level == 1:
-                data.append(handValue(playersHand))
-            elif level == 2:
-                data.append([handValue(playersHand), dealersHand[0].value])
-            elif level == 3:
-                data.append([handValue(playersHand), dealersHand[0].value] + deck.negation())
-            
-            prediction = model.predict(np.array(data), verbose=0)
-            if prediction[0][0] > prediction[0][1]:
-                choice = 's'
+            if setName != 'standard':
+                if level == 1:
+                    data.append(handValue(playersHand))
+                elif level == 2:
+                    data.append([handValue(playersHand), dealersHand[0].value])
+                elif level == 3:
+                    data.append([handValue(playersHand), dealersHand[0].value] + deck.negation())
+                
+                prediction = model.predict(np.array(data), verbose=0)
+                if prediction[0][0] > prediction[0][1]:
+                    choice = 's'
+                else:
+                    choice = 'h'
             else:
-                choice = 'h'
+                choice = standardStrategy(playersSum, playersHand, dealersHand)
             
             if choice == 'h':
                 playersHand.append(deck.deal())
@@ -141,7 +174,6 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
                         break
     tEnd = time()
     return wins, losses, ties, tEnd - tStart
-
 
 if __name__ == '__main__':
     try:
