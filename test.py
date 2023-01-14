@@ -41,7 +41,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
     Args:
         setName (str): The name of the model to test (standard to use standard strategy insteaad)
         iters (int): The number of rounds to simulate
-        level (int): The level of the model to test
+        level (int): The level of the model to test (irrelevant for standard strategy)
             level 1: only the player's hand value
             level 2: the player's hand value and the dealer's upcard
             level 3: the player's hand value, the dealer's upcard, and the deck's negation (card counting)
