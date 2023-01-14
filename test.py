@@ -38,7 +38,7 @@ def standardStrategy(playersSum: int, playersHand: list, dealersHand: list):
 
 def randomChoice(playersSum: int):
     choices = ['h', 's']
-    choice = rd.choices(choices, weights=(1 - playersSum / 21, playersSum / 21), k=1)[0]
+    choice = rd.choices(choices, weights=(1 - (playersSum - 4) / 17, (playersSum - 4) / 17), k=1)[0]
     return choice
 
 def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool, seed):
