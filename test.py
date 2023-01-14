@@ -5,6 +5,7 @@ import getopt
 import sys
 import tensorflow as tf
 import numpy as np
+import random as rd
 from time import time
 
 def standardStrategy(playersSum: int, playersHand: list, dealersHand: list):
@@ -35,13 +36,17 @@ def standardStrategy(playersSum: int, playersHand: list, dealersHand: list):
             choice = 's'
     return choice
 
+def randomChoice(playersSum: int):
+    choices = ['h', 's']
+    choice = rd.choices(choices, weights=(1 - playersSum / 21, playersSum / 21), k=1)[0]
+    return choice
 
 def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool, seed):
     '''Test a model against a set number of iterations of blackjack
     Args:
-        setName (str): The name of the model to test (standard to use standard strategy insteaad)
+        setName (str): The name of the model to test (standard to use standard strategy instead, random to choose randomly weighed on current player hand value)
         iters (int): The number of rounds to simulate
-        level (int): The level of the model to test (irrelevant for standard strategy)
+        level (int): The level of the model to test (irrelevant for standard strategy and random)
             level 1: only the player's hand value
             level 2: the player's hand value and the dealer's upcard
             level 3: the player's hand value, the dealer's upcard, and the deck's negation (card counting)
@@ -49,7 +54,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
         shuffle (bool): Whether or not to shuffle the deck (needed only for level 3)
         seed (int): The seed to use for shuffling the deck (None for default)'''
     deck = Deck(seed)
-    if setName != 'standard':
+    if setName != 'standard' and setName != 'random':
         with open(f'models/{setName}.json', 'r') as f:
             model = tf.keras.models.model_from_json(f.read(), custom_objects={'GlorotUniform': tf.keras.initializers.glorot_uniform})
         model.load_weights(f'models/{setName}.h5')
@@ -94,7 +99,7 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
         
         # player's turn
         for i in range(8):
-            if setName != 'standard':
+            if setName != 'standard' and setName != 'random':
                 if level == 1:
                     data.append(handValue(playersHand))
                 elif level == 2:
@@ -107,8 +112,10 @@ def test_model(setName: str, iters: int, level: int, debug: bool, shuffle: bool,
                     choice = 's'
                 else:
                     choice = 'h'
-            else:
+            elif setName == 'standard':
                 choice = standardStrategy(playersSum, playersHand, dealersHand)
+            elif setName == 'random':
+                choice = randomChoice(playersSum)
             
             if choice == 'h':
                 playersHand.append(deck.deal())
